@@ -36,10 +36,8 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		for _, s := range strings.Split(candidates, ",") {
 			var v *goversion.Version
 			v, err = goversion.NewVersion(s)
-			if err != nil {
-				http.Error(w,
-					fmt.Sprintf("invalid go version %q", s),
-					http.StatusBadRequest)
+			if err != nil || v == nil {
+				continue // silently ignoring bad versions
 			}
 			versions = append(versions, v)
 		}
