@@ -30,10 +30,24 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		http.Error(w, "invalid constraint", http.StatusBadRequest)
 		return
 	}
-	versions, err := h.getVersions()
-	if err != nil {
-		http.Error(w, "", http.StatusInternalServerError)
-		return
+	candidates := req.URL.Query().Get("candidates")
+	var versions []*goversion.Version
+	if candidates != "" {
+		for _, s := range strings.Split(candidates, ",") {
+			v, err := goversion.NewVersion(s)
+			if err != nil {
+				http.Error(w,
+					fmt.Sprintf("invalid go version %q", s),
+					http.StatusBadRequest)
+			}
+			versions = append(versions, v)
+		}
+	} else {
+		versions, err = h.getVersions()
+		if err != nil {
+			http.Error(w, "", http.StatusInternalServerError)
+			return
+		}
 	}
 	var result *goversion.Version
 	for _, v := range versions {
