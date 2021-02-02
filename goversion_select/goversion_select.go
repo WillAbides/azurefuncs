@@ -34,7 +34,8 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	var versions []*goversion.Version
 	if candidates != "" {
 		for _, s := range strings.Split(candidates, ",") {
-			v, err := goversion.NewVersion(s)
+			var v *goversion.Version
+			v, err = goversion.NewVersion(s)
 			if err != nil {
 				http.Error(w,
 					fmt.Sprintf("invalid go version %q", s),
