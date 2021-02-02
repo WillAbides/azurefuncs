@@ -1,3 +1,5 @@
 tmp/
 bin/
 .bindown/
+.local.settings.json
+azbin/

@@ -22,3 +22,9 @@ GOFUMPT_REV := 4fd085cb6d5fb7ec2bb2c6fc8039ec3a48355807
 bin/gofumpt: bin/gobin
 	GOBIN=${CURDIR}/bin \
 	bin/gobin mvdan.cc/gofumpt@$(GOFUMPT_REV)
+
+bin/handler: gobuildcache
+	go build -ldflags "-s -w" -o $@ ./cmd/handler
+
+azbin/handler: gobuildcache
+	GOOS=linux GOARCH=amd64 go build -ldflags "-s -w" -o $@ ./cmd/handler
