@@ -3,16 +3,15 @@ name: azure deploy
 on:
   [workflow_dispatch]
 
-env:
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: '.'
-
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
       - run: make azbin/handler
       - uses: Azure/functions-action@v1
+        env:
+          WEBSITE_RUN_FROM_PACKAGE: ""
         id: fa
         with:
           app-name: willabides
