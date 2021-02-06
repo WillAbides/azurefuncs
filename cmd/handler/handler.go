@@ -19,7 +19,7 @@ func main() {
 	}
 	sMux := http.NewServeMux()
 	sMux.HandleFunc("/api/helloworld", helloworld.Handler())
-	sMux.HandleFunc("/api/ping", ping.Handler("5"))
+	sMux.HandleFunc("/api/ping", ping.Handler("6"))
 	sMux.Handle("/api/goversion_select", &gv_select.Handler{
 		VersionsMaxAge: 15 * time.Minute,
 		VersionsSource: "https://raw.githubusercontent.com/WillAbides/goreleases/main/versions.txt",
