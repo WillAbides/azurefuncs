@@ -31,7 +31,7 @@ func main() {
 	})
 	sMux.HandleFunc("/api/env", func(w http.ResponseWriter, req *http.Request) {
 		for _, s := range os.Environ() {
-			fmt.Fprintln(w, []byte(s))
+			fmt.Fprintln(w, s)
 		}
 	})
 
