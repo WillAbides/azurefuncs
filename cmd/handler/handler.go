@@ -39,11 +39,11 @@ func main() {
 		fmt.Fprintln(w, "whoami: " + string(whoami))
 
 		cmd = exec.Command("who", "am", "i")
-		who_am_i, err := cmd.Output()
+		whoami, err = cmd.Output()
 		if err != nil {
 			http.Error(w, fmt.Sprintf("error from who am i: %v", err), http.StatusInternalServerError)
 		}
-		fmt.Fprintln(w, "who am i: " + string(who_am_i))
+		fmt.Fprintln(w, "who am i: " + string(whoami))
 
 		for _, s := range os.Environ() {
 			fmt.Fprintln(w, s)
