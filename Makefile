@@ -26,5 +26,8 @@ bin/gofumpt: bin/gobin
 bin/handler: gobuildcache
 	go build -ldflags "-s -w" -o $@ ./cmd/handler
 
+bin/azdeploy: gobuildcache
+	go build -ldflags "-s -w" -o $@ ./cmd/azdeploy
+
 azbin/handler: gobuildcache
 	GOOS=linux GOARCH=amd64 go build -ldflags "-s -w" -o $@ ./cmd/handler

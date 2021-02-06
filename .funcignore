@@ -4,3 +4,6 @@ local.settings.json
 .bindown/
 bin/
 cmd/
+.idea/
+tmp/
+.env

@@ -1,0 +1,7 @@
+files:
+  - azbin/handler
+executable: azbin/handler
+functions:
+  - goversion_select
+  - helloworld
+  - ping

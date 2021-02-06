@@ -4,6 +4,9 @@ set -e
 
 CDPATH="" cd -- "$(dirname -- "$(dirname -- "$0")")"
 
-make -s azbin/handler
+make -s bin/azdeploy
 
-func azure functionapp publish willabides
+if [ -f ".env" ]; then
+  exec godotenv bin/azdeploy "$@"
+fi
+exec bin/azdeploy "$@"
