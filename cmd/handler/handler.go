@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/exec"
 	"time"
 
 	gv_select "github.com/willabides/azurefuncs/goversion_select"
@@ -30,6 +31,20 @@ func main() {
 		VersionsSource: "https://raw.githubusercontent.com/WillAbides/goreleases/main/versions.txt",
 	})
 	sMux.HandleFunc("/api/env", func(w http.ResponseWriter, req *http.Request) {
+		cmd := exec.Command("whoami")
+		whoami, err := cmd.Output()
+		if err != nil {
+			http.Error(w, fmt.Sprintf("error from whoami: %v", err), http.StatusInternalServerError)
+		}
+		fmt.Fprintln(w, "whoami: " + string(whoami))
+
+		cmd = exec.Command("who", "am", "i")
+		who_am_i, err := cmd.Output()
+		if err != nil {
+			http.Error(w, fmt.Sprintf("error from who am i: %v", err), http.StatusInternalServerError)
+		}
+		fmt.Fprintln(w, "who am i: " + string(who_am_i))
+
 		for _, s := range os.Environ() {
 			fmt.Fprintln(w, s)
 		}
