@@ -11,7 +11,12 @@ jobs:
       - uses: WillAbides/setup-go-faster@v1
         with:
           go-version: 1.15.x
-      - run: make azbin/handler
+      - name: build
+        env:
+          GOOS: linux
+          GOARCH: amd64
+        run: |
+          go build -o azbin/handler -ldflags="-s -w -X 'main.version=v99'" ./cmd/handler
       - name: deploy
         env:
           AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}

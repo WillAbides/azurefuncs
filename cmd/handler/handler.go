@@ -12,7 +12,12 @@ import (
 	"github.com/willabides/azurefuncs/ping"
 )
 
+var version string
+
 func main() {
+	if version == "" {
+		version = "dev"
+	}
 	listenAddr := ":9834"
 	if val, ok := os.LookupEnv("FUNCTIONS_CUSTOMHANDLER_PORT"); ok {
 		listenAddr = ":" + val
