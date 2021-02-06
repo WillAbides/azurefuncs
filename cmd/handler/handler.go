@@ -29,6 +29,15 @@ func main() {
 		VersionsMaxAge: 15 * time.Minute,
 		VersionsSource: "https://raw.githubusercontent.com/WillAbides/goreleases/main/versions.txt",
 	})
+	sMux.HandleFunc("/api/env", func(w http.ResponseWriter, req *http.Request) {
+		for _, s := range os.Environ() {
+			_, err := w.Write([]byte(s))
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+		}
+	})
 
 	log.Printf("About to listen on %s. Go to http://127.0.0.1%s/", listenAddr, listenAddr)
 	log.Fatal(http.ListenAndServe(listenAddr, http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
