@@ -41,6 +41,7 @@ func main() {
 		writeCmdOutput(w, "uname", "-a")
 		writeCmdOutput(w, "which", "runc")
 		writeCmdOutput(w, "which", "docker")
+		writeCmdOutput(w, "cat", "/proc/version")
 	})
 
 	log.Printf("About to listen on %s. Go to http://127.0.0.1%s/", listenAddr, listenAddr)
