@@ -2,10 +2,12 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"os"
 	"os/exec"
+	"strings"
 	"time"
 
 	gv_select "github.com/willabides/azurefuncs/goversion_select"
@@ -31,23 +33,14 @@ func main() {
 		VersionsSource: "https://raw.githubusercontent.com/WillAbides/goreleases/main/versions.txt",
 	})
 	sMux.HandleFunc("/api/env", func(w http.ResponseWriter, req *http.Request) {
-		cmd := exec.Command("whoami")
-		whoami, err := cmd.Output()
-		if err != nil {
-			http.Error(w, fmt.Sprintf("error from whoami: %v", err), http.StatusInternalServerError)
-		}
-		fmt.Fprintln(w, "whoami: "+string(whoami))
-
-		cmd = exec.Command("who", "am", "i")
-		whoami, err = cmd.Output()
-		if err != nil {
-			http.Error(w, fmt.Sprintf("error from who am i: %v", err), http.StatusInternalServerError)
-		}
-		fmt.Fprintln(w, "who am i: "+string(whoami))
-
 		for _, s := range os.Environ() {
 			fmt.Fprintln(w, s)
 		}
+		writeCmdOutput(w, "whoami")
+		writeCmdOutput(w, "who", "am", "i")
+		writeCmdOutput(w, "uname", "-a")
+		writeCmdOutput(w, "which", "runc")
+		writeCmdOutput(w, "which", "docker")
 	})
 
 	log.Printf("About to listen on %s. Go to http://127.0.0.1%s/", listenAddr, listenAddr)
@@ -55,4 +48,13 @@ func main() {
 		fmt.Println("got a request", req.URL.String())
 		sMux.ServeHTTP(w, req)
 	})))
+}
+
+func writeCmdOutput(w io.Writer, cmd string, args ...string) {
+	fmt.Fprintln(w, cmd, strings.Join(args, " "))
+	b, err := exec.Command(cmd, args...).CombinedOutput() //nolint:gosec // checked
+	if err != nil {
+		fmt.Fprintf(w, "error: %v\n", err)
+	}
+	fmt.Fprintln(w, string(b))
 }
