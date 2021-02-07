@@ -6,3 +6,4 @@ functions:
   - helloworld
   - ping
   - env
+  - sign-storage
