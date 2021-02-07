@@ -16,7 +16,7 @@ jobs:
           GOOS: linux
           GOARCH: amd64
         run: |
-          go build -o azbin/handler -ldflags="-s -w -X 'main.version=v99'" ./cmd/handler
+          go build -o azbin/handler -ldflags="-s -w -X 'main.version=${{ github.sha }}'" ./cmd/handler
       - name: deploy
         env:
           AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
