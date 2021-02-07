@@ -32,10 +32,10 @@ func doIt(ctx context.Context) (string, error) {
 	// Use the azure resource id of user assigned identity when creating the token.
 	// identityResourceID := "/subscriptions/{subscriptionID}/resourceGroups/testGroup/providers/Microsoft.ManagedIdentity/userAssignedIdentities/test-identity"
 	// resource := "https://resource"
-	var applicationID, identityResourceID, resource string
+	var applicationID, identityResourceID string
 
 	callbacks := func(token adal.Token) error { return nil }
-	tokenCredentials, err := getOAuthToken(applicationID, identityResourceID, resource, callbacks)
+	tokenCredentials, err := getOAuthToken(applicationID, identityResourceID, "https://storage.azure.com", callbacks)
 	if err != nil {
 		return "", err
 	}
