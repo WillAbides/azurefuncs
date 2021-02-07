@@ -19,7 +19,7 @@ func Handler() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		got, err := doIt(req.Context())
 		if err != nil {
-			http.Error(w, "FOOFOO " + err.Error(), http.StatusInternalServerError)
+			http.Error(w, "FOOFOO " + err.Error(), http.StatusInsufficientStorage)
 			return
 		}
 		fmt.Fprintln(w, got)
