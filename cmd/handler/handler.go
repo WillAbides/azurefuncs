@@ -13,7 +13,7 @@ import (
 	gv_select "github.com/willabides/azurefuncs/goversion_select"
 	"github.com/willabides/azurefuncs/helloworld"
 	"github.com/willabides/azurefuncs/ping"
-	"github.com/willabides/azurefuncs/sign_storage"
+	signstorage "github.com/willabides/azurefuncs/sign_storage"
 )
 
 var version string
@@ -44,7 +44,7 @@ func main() {
 		writeCmdOutput(w, "which", "docker")
 		writeCmdOutput(w, "cat", "/proc/version")
 	})
-	sMux.HandleFunc("/api/sign-storage", sign_storage.Handler())
+	sMux.HandleFunc("/api/sign-storage", signstorage.Handler())
 
 	log.Printf("About to listen on %s. Go to http://127.0.0.1%s/", listenAddr, listenAddr)
 	log.Fatal(http.ListenAndServe(listenAddr, http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {

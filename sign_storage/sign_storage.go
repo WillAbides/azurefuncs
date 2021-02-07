@@ -1,4 +1,4 @@
-package sign_storage
+package signstorage
 
 import (
 	"context"
@@ -14,6 +14,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
+// Handler returns a handler
 func Handler() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		got, err := doIt(req.Context())
@@ -25,6 +26,7 @@ func Handler() http.HandlerFunc {
 	}
 }
 
+//nolint:gocritic // messy code
 func doIt(ctx context.Context) (string, error) {
 	accountName := "willabidesstorage"
 	// Use the azure resource id of user assigned identity when creating the token.
@@ -63,6 +65,7 @@ func doIt(ctx context.Context) (string, error) {
 		return "", fmt.Errorf("not 201")
 	}
 	return blobURL.String(), nil
+
 	//sigValues := azblob.BlobSASSignatureValues{
 	//	Protocol:      azblob.SASProtocolHTTPS, // Users MUST use HTTPS (not HTTP)
 	//	ContainerName: containerName,
@@ -73,7 +76,7 @@ func doIt(ctx context.Context) (string, error) {
 	//sigValues.NewSASQueryParameters(tokenCredentials)
 }
 
-func fetchMSIToken(applicationID string, identityResourceID string, resource string, callbacks ...adal.TokenRefreshCallback) (*adal.ServicePrincipalToken, error) {
+func fetchMSIToken(applicationID, identityResourceID, resource string, callbacks ...adal.TokenRefreshCallback) (*adal.ServicePrincipalToken, error) {
 	// Both application id and identityResourceId cannot be present at the same time.
 	if applicationID != "" && identityResourceID != "" {
 		return nil, fmt.Errorf("didn't expect applicationID and identityResourceID at same time")
@@ -107,9 +110,11 @@ func fetchMSIToken(applicationID string, identityResourceID string, resource str
 		return nil, err
 	}
 
-	return spt, spt.Refresh()
+	err = spt.Refresh()
+	return spt, err
 }
 
+//nolint:gocritic // messy code
 func getOAuthToken(applicationID, identityResourceID, resource string, callbacks ...adal.TokenRefreshCallback) (*azblob.TokenCredential, error) {
 	spt, err := fetchMSIToken(applicationID, identityResourceID, resource, callbacks...)
 	if err != nil {
@@ -123,7 +128,7 @@ func getOAuthToken(applicationID, identityResourceID, resource string, callbacks
 	}
 
 	tc := azblob.NewTokenCredential(spt.Token().AccessToken, func(tc azblob.TokenCredential) time.Duration {
-		_ = spt.Refresh()
+		_ = spt.Refresh() //nolint:errcheck // copied this code from an example
 		return time.Until(spt.Token().Expires())
 	})
 
